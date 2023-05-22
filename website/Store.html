@@ -20,7 +20,7 @@
     }
 
     const storeDiv = document.getElementById("store");
-    const url = "http://localhost:8080/ords/resttp/shoes"; // updated to match your schema
+    const url = "http://localhost:8080/ords/resttp/shoes"; 
     fetch(url)
         .then((resp) => resp.json())
         .then(function (data) {
@@ -29,7 +29,13 @@
                 let div = createNode("div"),
                     h2 = createNode("h2"),
                     p = createNode("p");
-                h2.innerHTML = `${shoe.name}`;
+                let genderDeclaration;
+                if (shoe.gender==0){
+                    genderDeclaration = "Women's"
+                } else {
+                    genderDeclaration = "Men's"
+                }
+                h2.innerHTML = `${shoe.name} `+genderDeclaration;
                 p.innerHTML = `Size: ${shoe.size}, Stock: ${shoe.stock}, Price: ${shoe.price}`;
                 append(div, h2);
                 append(div, p);
