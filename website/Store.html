@@ -5,46 +5,21 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Store Page</title>
+    <link rel="stylesheet" type="text/css" href="./style.css">
 </head>
 <body>
-    <h1>Store</h1>
-    <div id="store"></div>
-    
-    <script>
-    function createNode(element) {
-        return document.createElement(element);
-    }
+    <ul class="navi">
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="store.html" style="background-color: #c9c5c5;">Magasin</a></li>
+        <li><a href="management.html">Gestion</a></li>
+    </ul class="navi">
 
-    function append(parent, el) {
-        return parent.appendChild(el);
-    }
 
-    const storeDiv = document.getElementById("store");
-    const url = "http://localhost:8080/ords/resttp/shoes"; 
-    fetch(url)
-        .then((resp) => resp.json())
-        .then(function (data) {
-            let shoes = data.items;
-            return shoes.map(function (shoe) {
-                let div = createNode("div"),
-                    h2 = createNode("h2"),
-                    p = createNode("p");
-                let genderDeclaration;
-                if (shoe.gender==0){
-                    genderDeclaration = "Women's"
-                } else {
-                    genderDeclaration = "Men's"
-                }
-                h2.innerHTML = `${shoe.name} `+genderDeclaration;
-                p.innerHTML = `Size: ${shoe.size}, Stock: ${shoe.stock}, Price: ${shoe.price}`;
-                append(div, h2);
-                append(div, p);
-                append(storeDiv, div);
-            });
-        })
-        .catch(function (error) {
-            console.log(JSON.stringify(error));
-        });
-    </script>
+    <div id="right">
+        <h1>Chaussures</h1>
+        <div id="store"></div>
+    </div>
+
+    <script src="./storejs.js"></script>
 </body>
 </html>
