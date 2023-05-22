@@ -26,4 +26,23 @@ body {
   .navi li a:hover {
     background-color: #f0f0f0; 
   }
+
+  .magasin {
+    display: flex;
+}
+
+.left, .right {
+    flex: 1;
+    padding: 20px;
+}
+
+.left {
+    border-right: 2px solid #000; /* This adds the vertical line */
+}
+
+.orders {
+    border: 2px solid #000; /* This isolates the orders in its own rectangle */
+    padding: 20px;
+}
+
   
