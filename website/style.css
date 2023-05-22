@@ -3,14 +3,14 @@ body {
 }
 .rectangle-left {
   width: 465px;
-  height: 300px;
+  height: 295px;
   float: left;
   left: 25%;
   top: 20%;
-  line-height:140px;
+  line-height:110px;
   border-radius: 50%;
   font-size: 22px;
-  font-family: 'Courier New', Courier, monospace;
+  font-family: 'Sedgwick Ave Display';font-size: 29px;
   color: rgb(0, 0, 0);
   text-align: center;
   background: black;
