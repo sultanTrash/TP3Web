@@ -41,8 +41,8 @@ ALTER TABLE orders ADD CONSTRAINT orders_pk PRIMARY KEY ( order_id );
 CREATE TABLE shoes (
     shoe_id VARCHAR2(10) NOT NULL,
     name    VARCHAR2(100) NOT NULL,
-    gender  BLOB NOT NULL,
-    "size"  NUMBER(2, 1) NOT NULL,
+    gender  NUMBER CHECK (gender IN (0, 1)) NOT NULL,
+    "size"  NUMBER(3, 1) NOT NULL,
     stock   INTEGER NOT NULL,
     price   NUMBER NOT NULL
 );

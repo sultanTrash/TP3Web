@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Store Page</title>
+</head>
+<body>
+    <h1>Store</h1>
+    <div id="store"></div>
+    
+    <script>
+    function createNode(element) {
+        return document.createElement(element);
+    }
+
+    function append(parent, el) {
+        return parent.appendChild(el);
+    }
+
+    const storeDiv = document.getElementById("store");
+    const url = "http://localhost:8080/ords/resttp/shoes"; // updated to match your schema
+    fetch(url)
+        .then((resp) => resp.json())
+        .then(function (data) {
+            let shoes = data.items;
+            return shoes.map(function (shoe) {
+                let div = createNode("div"),
+                    h2 = createNode("h2"),
+                    p = createNode("p");
+                h2.innerHTML = `${shoe.name}`;
+                p.innerHTML = `Size: ${shoe.size}, Stock: ${shoe.stock}, Price: ${shoe.price}`;
+                append(div, h2);
+                append(div, p);
+                append(storeDiv, div);
+            });
+        })
+        .catch(function (error) {
+            console.log(JSON.stringify(error));
+        });
+    </script>
+</body>
+</html>
