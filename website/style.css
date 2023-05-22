@@ -1,6 +1,28 @@
 body {
     background-color: rgb(255, 255, 255);
 }
+.rectangle-left {
+  width: 465px;
+  height: 300px;
+  float: left;
+  left: 25%;
+  top: 20%;
+  line-height:140px;
+  border-radius: 50%;
+  font-size: 22px;
+  font-family: 'Courier New', Courier, monospace;
+  color: rgb(0, 0, 0);
+  text-align: center;
+  background: black;
+  margin: 100px;
+}
+.imagePosition{
+  width: 250px;
+  height: 250px;
+  float: right;
+  margin-right: 700px;
+}
+
 .navi {
     list-style-type: none; 
     padding: 0;
