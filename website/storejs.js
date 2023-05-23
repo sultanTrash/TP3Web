@@ -6,14 +6,71 @@ function append(parent, el) {
     return parent.appendChild(el);
 }
 
+let order_id = new Date().getTime();
+createOrder(order_id);
+console.log(order_id);
+
 function attachEvent(button, shoe, shoeIDString, quantityInput){
     button.addEventListener("click",function() {
         let quantity = parseInt(quantityInput.value);
         if (shoe.stock > 0){
             updateStock(shoe, shoeIDString, quantity);
+            let order_items_id = new Date().getTime();
+            let order_itemjs = {
+                order_items_id: order_items_id.toString(),
+                quantity: quantity,
+                orders_order_id: order_id.toString(),
+                shoes_shoe_id: shoeIDString.toString()
+            };
+            createOrderItem(order_itemjs);
         }
     });
 }
+
+function createOrderItem(order_itemjs){
+    const orderUrl = "http://localhost:8080/ords/resttp/order_items/";
+    fetch(orderUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type' : 'application/json',
+        },  
+        body: JSON.stringify(order_itemjs),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Order Item Created: ', data);
+        // here you can also update the UI to reflect the new order item
+    })
+    .catch((error)=> {
+        console.error('Error: ',error);
+    });
+}
+
+function createOrder(order_id){
+    let orderjs = {
+        order_id: order_id,
+        date: new Date().toISOString(),
+        clients_client_id: null,
+    };
+    const creaUrl = "http://localhost:8080/ords/resttp/orders/";
+    fetch(creaUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type' : 'application/json',
+        },  
+        body: JSON.stringify(orderjs),
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Order Created: ', data);
+        // here you can also update the UI to reflect the new order item
+    })
+    .catch((error)=> {
+        console.error('Error: ',error);
+    });
+    
+}
+
 
 const storeDiv = document.getElementById("store");
 const toggleChaussure = document.getElementById("toggleChaussures");
