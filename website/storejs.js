@@ -9,25 +9,39 @@ function append(parent, el) {
 let order_id = new Date().getTime();
 createOrder(order_id);
 console.log(order_id);
+let totalCost = 0;
 
 function attachEvent(button, shoe, shoeIDString, quantityInput){
     button.addEventListener("click",function() {
         let quantity = parseInt(quantityInput.value);
-        if (shoe.stock > 0){
-            updateStock(shoe, shoeIDString, quantity);
-            let order_items_id = new Date().getTime();
-            let order_itemjs = {
-                order_items_id: order_items_id.toString(),
-                quantity: quantity,
-                orders_order_id: order_id.toString(),
-                shoes_shoe_id: shoeIDString.toString()
-            };
-            createOrderItem(order_itemjs);
-        }
+        const fetchUrl="http://localhost:8080/ords/resttp/shoes/"+shoeIDString;
+        fetch(fetchUrl)
+            .then(response=>response.json())
+            .then(fetchedShoe =>{
+                if (fetchedShoe.stock >= quantity){
+                    updateStock(fetchedShoe, shoeIDString, quantity);
+                    let order_items_id = new Date().getTime();
+                    let order_itemjs = {
+                        order_items_id: order_items_id.toString(),
+                        quantity: quantity,
+                        orders_order_id: order_id.toString(),
+                        shoes_shoe_id: shoeIDString.toString()
+                    };
+                    createOrderItem(order_itemjs, fetchedShoe);
+                }
+                else {
+                    console.log("Not enough stock.");
+                    window.confirm("Pas assez de stock");
+                }
+            })
+            .catch((error)=> {
+                console.error('Error: ', error);
+            });
     });
 }
 
-function createOrderItem(order_itemjs){
+
+function createOrderItem(order_itemjs, shoe){
     const orderUrl = "http://localhost:8080/ords/resttp/order_items/";
     fetch(orderUrl, {
         method: 'POST',
@@ -39,7 +53,34 @@ function createOrderItem(order_itemjs){
     .then(response => response.json())
     .then(data => {
         console.log('Order Item Created: ', data);
-        // here you can also update the UI to reflect the new order item
+        let orderItemDiv = createNode('div'),
+        h2 = createNode('h2'),
+        p = createNode('p'),
+        quantityTemp=0-data.quantity,
+        deleteButton = createNode('button');
+        deleteButton.innerText = "Enlever de la commande";
+        h2.innerHTML = `${shoe.name} - Quantite: ${data.quantity}`;
+        p.innerHTML = "ID de la sous-commande: "+data.order_items_id+ "     taille: "+shoe.size+" sexe: "+shoe.gender;
+        append(orderItemDiv, h2);
+        append(orderItemDiv, p);
+        append(orderItemDiv, deleteButton);
+        append(orderItemsDiv, orderItemDiv);
+        deleteButton.addEventListener("click", function(){
+            const deleteUrl = orderUrl + data.order_items_id;
+            fetch(deleteUrl, {
+                method: 'DELETE'
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Order Item Deleted: ', data);
+                orderItemDiv.remove(); // Remove the item from the display
+                // Restock the shoe
+                updateStock(shoe, shoe.shoe_id, quantityTemp);
+            })
+            .catch((error) => {
+                console.error('Error: ', error);
+            });
+        });
     })
     .catch((error)=> {
         console.error('Error: ',error);
@@ -74,9 +115,13 @@ function createOrder(order_id){
 
 const storeDiv = document.getElementById("store");
 const toggleChaussure = document.getElementById("toggleChaussures");
+const commandeTitle = document.getElementById("commandeTitle");
+const totalCostHtml = document.getElementById("totalCout");
 let isStoreVisible = false;
 storeDiv.style.display = "none";
-const url = "http://localhost:8080/ords/resttp/shoes"; 
+const url = "http://localhost:8080/ords/resttp/shoes";
+commandeTitle.innerHTML = "Commande ID: "+order_id;
+
 fetch(url)
     .then((resp) => resp.json())
     .then(function (data) {
@@ -121,6 +166,8 @@ function updateStock(shoe, shoeIDString, quantity){
         .then(response=>response.json())
         .then(shoe =>{
             shoe.stock -= quantity;
+            totalCost += quantity * shoe.price;
+            totalCostHtml.innerHTML="Total "+totalCost.toFixed(2)+"$";
             console.log(quantity + " chaussures " + shoeIDString + " ont ete ajoutee");
             fetch(updateUrl, {
                 method: 'PUT',
