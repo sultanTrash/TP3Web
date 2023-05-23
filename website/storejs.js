@@ -18,7 +18,7 @@ function attachEvent(button, shoe, shoeIDString, quantityInput){
         fetch(fetchUrl)
             .then(response=>response.json())
             .then(fetchedShoe =>{
-                if (fetchedShoe.stock >= quantity){
+                if (fetchedShoe.stock >= quantity && quantity>0){
                     updateStock(fetchedShoe, shoeIDString, quantity);
                     let order_items_id = new Date().getTime();
                     let order_itemjs = {
